@@ -2,27 +2,47 @@ CREATE DATABASE db_pizzaria_legal;
 
 USE db_pizzaria_legal;
 
-CREATE TABLE tb_pizzas(
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	sabor VARCHAR(255),
-	borda VARCHAR(4),
-    preco DECIMAL(6,2),
-    bebida VARCHAR(255)
-);
 CREATE TABLE tb_categorias(
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	tipo VARCHAR(255),
-	tamanho VARCHAR(255)
-	);
+    tipo VARCHAR(255),
+    tamanho VARCHAR(255)
+);
 
-INSERT INTO tb_pizzas (sabor, borda, preco, bebida)
-VALUES ("Caipira", "Com Catupiry", 47.90, "Guarana Antartica 2lts"),
-("Mussarela", "Sem Catupiry", 45.99, "Coca-Cola 2lts"),
-("Portuguesa", "Com Catupiry", 49.90, "Guarana Jesus 2lts"),
-("Sensação", "Com Nutella", 59.90, "Fanta Laranja 2lts"),
-("Nutella", "Sem Borda", 57.90, "Fanta Uva 2lts"),
-("Marguerita", "Com Catupiry", 49.99, "Fanta Guarana 2lts"),
-("Atum", "Sem Borda", 50.00, "Coca-Cola zero 2lts"),
-("Chocolate com Banana", "Com Nutella", 59.90, "Guarana Antartica zero 2lts");
+CREATE TABLE tb_pizzas(
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    ingredientes VARCHAR(255),
+    borda VARCHAR(255),
+    preco DECIMAL(5,2),
+    categoria_id BIGINT,
+    FOREIGN KEY (categoria_id) REFERENCES tb_categorias(id)
+);
 
-ALTER TABLE tb_pizzas MODIFY borda VARCHAR(255);
+INSERT INTO tb_categorias (tipo, tamanho) 
+VALUES ("Salgada","Brotinho"),
+("Salgada","Normal"),
+("Salgada","Big"),
+("Doce","Brotinho"),
+("Doce","Normal"),
+("Doce", "Big");
+
+INSERT INTO tb_pizzas (nome, ingredientes, borda, preco, categoria_id)
+VALUES ("MARGUERITA", "Molho de tomate, Mussarela e Manjericão", "Requeijão", 19.90, 1),
+("FRANGO COM CATUPIRY", "Molho de tomate, Frango desfiado e Catupiry", "Cheddar", 59.90, 2),
+("BACON", "Molho de tomate, Mussarela e Bacon", "Requeijão", 109.90, 3),
+("PIZZAIOLO", "Molho de tomate, Mussarela, Peito de peru, Bacon, Tomate e Catupiry", "Requeijão", 119.90, 3),
+("FRANGO COM BARBECUE", "Molho de tomate, Frango desfiado, Cream Cheese, Barbecue", "Requeijão", 59.90, 2),
+("CHARGE", "Chocolate ao leite, caramelo e amendoim ", "Chocolate ao leite", 59.90, 2),
+("MERENGUE", "Chocolate branco, suspiro e morango", "Chocolate branco", 100.90, 3),
+("CHOCOLATE COM MORANGO", "Chocolate branco e morangos picados", "Chocolate branco", 29.90, 1);
+
+SELECT * FROM tb_pizzas WHERE preco > 45.00;
+
+SELECT * FROM tb_pizzas WHERE preco BETWEEN 50 AND 100;
+
+SELECT * FROM tb_pizzas WHERE nome LIKE "%M%";
+
+SELECT * FROM tb_pizzas INNER JOIN tb_categorias ON tb_categorias.id = tb_pizzas.categoria_id;
+
+SELECT * FROM tb_pizzas INNER JOIN tb_categorias ON tb_categorias.id = tb_pizzas.categoria_id
+WHERE tb_categorias.tipo = "Doce";
